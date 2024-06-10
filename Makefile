@@ -1,10 +1,10 @@
 install:
-		poetry install --no-root
+	poetry install --no-root
 
 dev:
-	  poetry run fastapi dev src/main.py
+	poetry run fastapi dev src/main.py
 
 test:
-	  poetry run python src/tests.py
+	PYTHONPATH=src poetry run pytest src
 
-.PHONY: install dev
+.PHONY: install dev test

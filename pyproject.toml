@@ -1,14 +1,19 @@
 [tool.poetry]
 name = "python-coding-test"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "PDF file discrepancy checker API"
+authors = ["Dev Gill <26435947+sdevgill@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.111.0"
+pandas = "^2.2.2"
+pydantic-settings = "^2.3.1"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
 
 [build-system]
 requires = ["poetry-core"]
