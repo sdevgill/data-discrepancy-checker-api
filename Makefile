@@ -1,10 +1,13 @@
-install:
-	poetry install --no-root
+build: ## Build the container
+	docker compose build
 
-dev:
-	poetry run fastapi dev src/main.py
+up: ## Start container (in foreground)
+	docker compose up &
 
-test:
-	PYTHONPATH=src poetry run pytest src
+down: ## Stop container
+	docker compose down
 
-.PHONY: install dev test
+test: ## Run tests
+	docker compose run app pytest src
+
+.PHONY: build up down test
