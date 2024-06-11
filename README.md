@@ -37,6 +37,7 @@ was generated using version `1.8.3`
 Alternatively it's possible to `pip install` directly using the
 `pyproject.toml` or `requirements.txt`.
 
+--------------------------------------------------------------------------------------
 
 ## Completed Test: For Lantern
 
@@ -51,7 +52,9 @@ Hi! I completed the following tasks for this take-home test:
     - Adding type hints to improve code readability.
 - Wrote unit tests for the API endpoints and core functionality using `pytest` and `fastapi.TestClient`.
 - Updated the `Makefile` to run with Docker.
-- Dockerized the app so anyone can run it on any platform without potential issues. 
+- Dockerized the app so anyone can run it on any platform without potential issues.
+
+### Setup using Docker
 
 - To run the app using Docker, follow these steps:
     1. Make sure you have Docker (Or Orbastack for M Series Macs) installed on your system.
@@ -73,6 +76,58 @@ Hi! I completed the following tasks for this take-home test:
   make test
   ```
 
+### API Endpoint
+
+The API has a single endpoint for uploading a PDF and comparing its data with the database:
+
+- `POST /upload-pdf`
+    - Request body: The PDF file to upload (form-data)
+    - Response: A JSON object containing the company name and a summary of the data comparison
+
+Example response:
+
+```json
+{
+  "company_name": "RetailCo",
+  "summary": {
+    "Company Name": {
+      "database": "RetailCo",
+      "pdf": "RetailCo",
+      "match": true
+    }
+  }
+}
+```
+
+### Testing the API
+
+You can use Postman or cURL to test the `/upload-pdf` endpoint.
+
+#### Postman
+
+1. Create a new POST request in Postman
+2. Set the request URL to `http://localhost:8000/upload-pdf`
+3. In the "Body" tab, select "form-data"
+4. Add a new key named "file" and set its type to "File"
+5. Select the PDF file you want to upload
+6. Click "Send" to make the request
+
+#### cURL
+
+Run the following command in your terminal, replacing `<path_to_pdf>` with the path to your PDF file:
+
+```bash
+curl -X POST -F "file=@<path_to_pdf>" http://localhost:8000/upload-pdf
+```
+
+For example:
+
+```bash
+curl -X POST -F "file=@assets/retailco.pdf" http://localhost:8000/upload-pdf
+```
+
+### Final Comments
+
 Some low-hanging improvements and additional features to consider as the complexity of the app grows:
 
 - Implement user authentication and authorisation to secure the API endpoints.
@@ -89,3 +144,5 @@ Some low-hanging improvements and additional features to consider as the complex
   with `isort` - To standardise the codebase across contributors.
 - If using `pip` with Docker, create separate `requirements.txt` files for dev and prod environments to
   keep the production image lean and secure.
+- Set up a CI/CD pipeline to automate testing, building, and deployment processes. Use different envs for test, dev, and
+  prod.
