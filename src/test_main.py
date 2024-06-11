@@ -49,6 +49,20 @@ class TestAPI:
             assert response.status_code == 400
             assert response.json() == {"detail": "Invalid filename provided"}
 
+    def test_upload_pdf_file_not_found(self):
+        """
+        Test uploading a PDF file that the PdfService cannot find.
+        """
+        with open("assets/techcorp.pdf", "rb") as pdf_file:
+            response = client.post(
+                "/upload-pdf",
+                files={"file": ("techcorp.pdf", pdf_file, "application/pdf")},
+            )
+            assert response.status_code == 400
+            assert response.json() == {
+                "detail": "Cannot extract data. Invalid file provided."
+            }
+
     def test_load_database(self):
         """
         Test that the database is loaded correctly.
