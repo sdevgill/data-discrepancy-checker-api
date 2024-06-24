@@ -155,13 +155,65 @@ Now that we have an API for checking the discrepancies between the database and 
 application.
 
 - The data in the database is sourced from an external API, which we pull data from on a weekly basis. This is done
-using separate tools and a separate codebase.
+  using separate tools and a separate codebase.
 - If there are discrepancies between the PDF and the database, the user of our application needs a way to amend the
-value.
+  value.
 
 ### The Task
 
 Add an API endpoint that allows users to modify the data in the database if there is a discrepancy against the PDF.
+
 - Discuss what data we need to store and its shape
 - The data can be stored in-memory for the purposes of the exercise. It does not have to be written into a file or DB,
-but you may choose to do that.
+  but you may choose to do that.
+
+### Task 2 Comments
+
+For Task 2, we implemented a new API endpoint that allows users to modify the data in the database when there is a
+discrepancy against the PDF. Here's what we did and why:
+
+- New API Endpoint:
+  We added a new endpoint /update-db to handle database updates. This endpoint accepts POST requests with the following
+  parameters:
+
+    - company_name: The name of the company to update
+    - field: The field to be updated
+    - new_value: The new value for the field
+
+We chose this structure because it allows for flexible updates to any field in the database, making it easy to correct
+discrepancies as they are found.
+
+- Data Storage:
+  For this exercise, we continued to use the CSV file (data/database.csv) as our database. In a production environment,
+  we
+  would recommend using a proper database system for better performance, concurrency control, and data integrity.
+  However,
+  using the CSV file allows us to maintain consistency with the existing implementation and avoid introducing new
+  dependencies for this task.
+
+- Update Function:
+  We implemented an update function that handles the logic for updating the database. This function:
+
+    - Checks if the company exists in the database
+    - Updates the specified field with the new value
+    - Saves the updated data back to the CSV file
+
+- Error Handling:
+  We added appropriate error handling to deal with cases such as:
+
+- Company not found in the database
+- Invalid field names
+- General exceptions during the update process
+
+For future improvements:
+
+- Implementing authentication and authorization to ensure only authorized users can make changes to the database
+- Adding a logging system to track all changes made to the database
+- Implementing a more robust database solution for better data management and performance
+- Adding validation rules for the updated data to ensure data integrity
+
+To test the new endpoint, you can use cURL or Postman:
+
+```bash
+curl -X POST "http://localhost:8000/update-db?company_name=RetailCo&field=Revenue&new_value=1000000"```
+```

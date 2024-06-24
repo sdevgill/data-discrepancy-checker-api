@@ -71,31 +71,37 @@ def compare_data(
     return summary
 
 
-# Wrong
-# def save_data_to_db(database_df):
-#     database_df.to_csv(DATABASE_FILE)
-#
-#
-# def update(company_name, field, new_value):
-#     database_df = load_database()
-#
-#     if company_name not in database_df["Company Name"].values:
-#         print(database_df["Company Name"].values)
-#         raise HTTPException(
-#             status.HTTP_404_NOT_FOUND,
-#             detail="Invalid name provided",
-#         )
-#
-#     print(database_df["Company Name"] == company_name, field)
-#     database_df.loc[database_df["Company Name"] == company_name, field] = new_value
-#     save_data_to_db(database_df)
+def save_data_to_db(database_df: pd.DataFrame) -> None:
+    """
+    Save the DataFrame to a CSV file.
+
+    Args:
+        database_df (pd.DataFrame): The DataFrame to be saved.
+
+    Returns:
+        None
+    """
+    database_df.to_csv(DATABASE_FILE, index=False)
 
 
-def save_data_to_db(database_df):
-    database_df.to_csv(DATABASE_FILE)
+def update(
+    database_df: pd.DataFrame, company_name: str, field: str, new_value: str
+) -> None:
+    """
+    Update a specific field for a company in the DataFrame.
 
+    Args:
+        database_df (pd.DataFrame): The DataFrame containing the company data.
+        company_name (str): The name of the company to update.
+        field (str): The field to be updated.
+        new_value (str): The new value for the field.
 
-def update(database_df, company_name, field, new_value):
+    Raises:
+        HTTPException: If the company name is not found in the DataFrame.
+
+    Returns:
+        None
+    """
     if not database_df["Company Name"].isin([company_name]).any():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -165,18 +171,22 @@ async def upload_pdf(file: UploadFile = File(...)) -> JSONResponse:
         )
 
 
-# Wrong
-# @app.post("/update-db")
-# async def update_db(company_name, field, new_value):
-#     try:
-#         update(company_name, field, new_value)
-#         return JSONResponse(content={"DB updated succesfully"})
-#     except HTTPException:
-#         raise
-
-
 @app.post("/update-db")
-async def update_db(company_name: str, field: str, new_value: str):
+async def update_db(company_name: str, field: str, new_value: str) -> JSONResponse:
+    """
+    Update a specific field for a company in the database.
+
+    Args:
+        company_name (str): The name of the company to update.
+        field (str): The field to be updated.
+        new_value (str): The new value for the field.
+
+    Raises:
+        HTTPException: If an error occurs while updating the database.
+
+    Returns:
+        JSONResponse: A JSON response indicating the success of the update.
+    """
     try:
         database_df = load_database()
         update(database_df, company_name, field, new_value)
