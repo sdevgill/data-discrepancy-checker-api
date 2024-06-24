@@ -39,7 +39,7 @@ Alternatively it's possible to `pip install` directly using the
 
 --------------------------------------------------------------------------------------
 
-## Completed Test: For Lantern
+## Completed Test
 
 Hi! I completed the following tasks for this take-home test:
 
@@ -146,3 +146,22 @@ Some low-hanging improvements and additional features to consider as the complex
   keep the production image lean and secure.
 - Set up a CI/CD pipeline to automate testing, building, and deployment processes. Use different envs for test, dev, and
   prod.
+
+--------------------------------------------------------------------------------------
+
+## Pair Programming - Task 2
+
+Now that we have an API for checking the discrepancies between the database and company PDFs, we want to expand on our
+application.
+
+- The data in the database is sourced from an external API, which we pull data from on a weekly basis. This is done
+using separate tools and a separate codebase.
+- If there are discrepancies between the PDF and the database, the user of our application needs a way to amend the
+value.
+
+### The Task
+
+Add an API endpoint that allows users to modify the data in the database if there is a discrepancy against the PDF.
+- Discuss what data we need to store and its shape
+- The data can be stored in-memory for the purposes of the exercise. It does not have to be written into a file or DB,
+but you may choose to do that.

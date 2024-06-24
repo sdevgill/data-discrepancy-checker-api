@@ -71,6 +71,41 @@ def compare_data(
     return summary
 
 
+# Wrong
+# def save_data_to_db(database_df):
+#     database_df.to_csv(DATABASE_FILE)
+#
+#
+# def update(company_name, field, new_value):
+#     database_df = load_database()
+#
+#     if company_name not in database_df["Company Name"].values:
+#         print(database_df["Company Name"].values)
+#         raise HTTPException(
+#             status.HTTP_404_NOT_FOUND,
+#             detail="Invalid name provided",
+#         )
+#
+#     print(database_df["Company Name"] == company_name, field)
+#     database_df.loc[database_df["Company Name"] == company_name, field] = new_value
+#     save_data_to_db(database_df)
+
+
+def save_data_to_db(database_df):
+    database_df.to_csv(DATABASE_FILE)
+
+
+def update(database_df, company_name, field, new_value):
+    if not database_df["Company Name"].isin([company_name]).any():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Invalid '{company_name}' not found",
+        )
+
+    database_df.loc[database_df["Company Name"] == company_name, field] = new_value
+    save_data_to_db(database_df)
+
+
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)) -> JSONResponse:
     """
@@ -127,6 +162,31 @@ async def upload_pdf(file: UploadFile = File(...)) -> JSONResponse:
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
+
+# Wrong
+# @app.post("/update-db")
+# async def update_db(company_name, field, new_value):
+#     try:
+#         update(company_name, field, new_value)
+#         return JSONResponse(content={"DB updated succesfully"})
+#     except HTTPException:
+#         raise
+
+
+@app.post("/update-db")
+async def update_db(company_name: str, field: str, new_value: str):
+    try:
+        database_df = load_database()
+        update(database_df, company_name, field, new_value)
+        return JSONResponse(content={"message": "DB updated successfully"})
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while updating the database: {str(e)}",
         )
 
 
